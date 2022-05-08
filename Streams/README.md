@@ -1,6 +1,24 @@
-## Introduction
+# Streams
 
-<table of content>
+## Table of contents
+
+1. [Introduction](#introduction)
+2. [Some paragraph](#introduction)
+    1. [Sub paragraph](#subparagraph1)
+    2. [Sub paragraph](#subparagraph2)
+3. [Another paragraph](#paragraph2)
+
+## Some paragraph <a name="paragraph1"></a>
+
+The first paragraph text
+
+### Sub paragraph <a name="subparagraph1"></a>
+
+This is a sub paragraph, formatted in heading 3 style
+
+## Another paragraph <a name="paragraph2"></a>
+
+The second paragraph text
 
 ## Stream base classes
 
@@ -44,7 +62,7 @@ Example of Stream implementations are very common:
 - And many more
   on streams: we are not loading the entire file before sending it, we're sending it bit by bit as the server process it or recieve it
 
-## Streams:
+## Introduction <a name="introduction"></a>
 
 1. Readable Stream
   
@@ -56,7 +74,6 @@ Example of Stream implementations are very common:
   
 5. Transform Stream
   
-
 Resources:
 
 1. jsComplete [samer buna]
@@ -65,14 +82,13 @@ Resources:
   
 3. Node In practice
   
-
 ## What is a Stream? and why?
 
 and also read more about garbage collection on node [MarkSweep, Scavenge]
 
 Before digging into Streams, let's see first it's secret powers!
 
-![stream vs fs](file://C:\Users\ncm\Desktop\Learning Base\Javascript\node\img\stream_1.PNG);
+![stream vs fs](imgs/stream_1.PNG);
 
 ### Examples
 
@@ -201,7 +217,6 @@ There are four main types of streams in Node:
   
 - Transform: Manipulator!, aka "through streams", `zlib.createGzip`
   
-
 Streams are instances of `EventEmitter`, They inherit from the EventEmitter Base Class so, they emit events such as "error", "data", and so on!
 Streams are not limited to just using streams, it also can use `piping` which we'll discuss on a moment!
 
@@ -234,14 +249,13 @@ Streams have two main approach:
   
   Piping is the easiest way to work with streams, as it takes care of:
   
-
 - handling-errors
   
 - handling end of files
   
 - hanlding `backpressure` (we're going to discuss later!)
   Also with piping we can do a pipeline (chain of pipes) if we're using Duplex Streams
-  a -> Readable 
+  a -> Readable
   b,c -> Duplex
   d -> Writable
   
@@ -259,9 +273,8 @@ Streams have two main approach:
   c.pipe(d);
   ```
   
-  #### Readable
+#### Readable
   
-
 Readable can read from any type of source ['audio', 'video', 'images', 'text', 'binary file', etc], it provide flexible API around I/O sources
 example of Readable Stream are : [http request on the server, http response on the client, file system, ziping/unziping, tcp process, std.in];
 *Methods and Events Of Readable Stream*
@@ -272,7 +285,6 @@ example of Readable Stream are : [http request on the server, http response on t
   
 - The `end` event, which is emitted when there is no more data to be consumed from the stream.
   
-
 2. methods
 
 - `pipe`/`unpipe`
@@ -300,7 +312,7 @@ inStream.pipe(process.stdout);
 ```
 
 In this example, we are pushing all the data into the stream
-& piping ti to a `process.stdout` 
+& piping ti to a `process.stdout`
 What if we need to push data on demand, when the consumer asks for it?
 
 ```js
@@ -359,9 +371,9 @@ arrStream.on("end", () => console.log("done!"));
 ```
 
 Each Stream has internal methods which we can overwrite:
-_read() for readable Stream 
-and _write() for writable Stream
-_read() and _write() for duplex Stream and there are more internal methods we can overwrite!
+_read() for readable Stream
+and_write() for writable Stream
+_read() and_write() for duplex Stream and there are more internal methods we can overwrite!
 
 `this.push` -> pushed to the stream (arrStream) so we trigger the "data" event
 `this.push(null)` -> this signals "end" event
@@ -551,7 +563,6 @@ Duplex Streams help us compose streams to pipelines
   
 - Transform
   
-
 Duplex Streams can be piped between readable and writable
 
 ```js
@@ -629,7 +640,7 @@ process.stdin.pipe(xStream).pipe(process.stdout);
 
 `_flush` is used to add more data even if the readStream is stopped!
 
-## Real World Example Of Streams!
+## Real World Example Of Streams
 
 There alot of 3rd party modules that implements streams in it's core functionalites
 
@@ -648,17 +659,15 @@ There alot of 3rd party modules that implements streams in it's core functionali
   ```
   
 - Express (Yup!)
-  and so many more. 
+  and so many more.
   but on this section, I will try with you to implement Stream into some projects to get the full idea!
   
-
 1. Video/audio Server
   
 2. Image processing server
   
-  ## conclusion
+## conclusion
   
-
 There are alot of Streams out there, `zlib` package => transform stream that can zip incoming data from read stream and send it to writeStream
 
 `crypto` module rely heavily also on a duplex stream which can encrypt data from readale Stream and send encrypted data to a writable stream and vice versa
@@ -784,7 +793,6 @@ When choosing database, or network package, choose the one which provide stream 
   passing options is an important, because stream uses this options to configure the streams
   in case of Readable:
   
-
 - hightWaterMark: number of bytes to be stored in the internal buffer before pausing reading from the data source
 - encoding: "utf-8" and "ascii" and so on
 - objectMode: allow the stream to behave as stream of objects rather than bytes!
