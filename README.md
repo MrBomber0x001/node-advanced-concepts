@@ -25,11 +25,15 @@ The Resources I've used during my learning process was mainly divided into main 
 
 **Books:**
 
-- Node Design Patternn, Orielly
-- Node In Practice, Manning
-- Advanced Node, Samer Buna
+- [ ] <a href="https://www.oreilly.com/library/view/nodejs-design-patterns/9781839214110/">Node Design Patterns, Orielly</a>
+- [ ] <a href="https://www.manning.com/books/node-js-in-practice">Node In Practice, Manning</a>
+- [ ] <a href="https://jscomplete.com/learn/node-beyond-basics">Advanced Node, Samer Buna</a>
 
 **Courses**
 
-- Advanced Node, Alex Banks - linked in learning
-- Scaling Node application, Alex Banks - linked in learning
+- [ ] <a href="https://www.linkedin.com/learning/node-js-microservices">Advanced Node, Alex Banks - linked in learning</a>
+- [ ] <a href="https://www.linkedin.com/learning/advanced-node-js-scaling-applications">Scaling Node application, Alex Banks - linked in learning</a>
+
+**Featured Articles**
+Those articles discuss the internals of node
+
