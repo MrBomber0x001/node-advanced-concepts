@@ -82,3 +82,6 @@ Another Repo for Further Digging in: <a href="https://github.com/yjhjstz/deep-in
 - [ ] <a href="https://www.smashingmagazine.com/2020/04/nodejs-internals/">Node Internal</a>
 - [ ] <a href="https://betterprogramming.pub/javascript-internals-under-the-hood-of-a-browser-f357378cc922">Javascript under the hood of a browser</a> (very important)
 
+:D TODO: 
+- [ ] Add Books and Courses related to scalability.
+
