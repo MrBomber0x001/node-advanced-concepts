@@ -3,16 +3,15 @@
 On this repo, I've tried my best to have more consistency explaining some of the advanced node concepts
 for each concept I've included the following:
 
-- Introduction to the concept with illustrative approach
-- Examples
-- A full project to get your hands dirty and see the concept in real world
-- Resources for whom want to dig any further
+- Introduction to the concept with illustrative approach.
+- A full project to get your hands dirty and see the concept in real world.
+- Resources for whom want to dig any further.
 
 ## Contents
 
 - [ ] Events
 - [ ] Streams
-- [ ] Child process
+- [ ] Child Process and Worker Threads
 - [ ] CLI
 - [ ] Microservices
 
@@ -34,6 +33,8 @@ The Resources I've used during my learning process was mainly divided into main 
 
 - [ ] <a href="https://www.linkedin.com/learning/node-js-microservices">Advanced Node, Alex Banks - linked in learning</a>
 - [ ] <a href="https://www.linkedin.com/learning/advanced-node-js-scaling-applications">Scaling Node application, Alex Banks - linked in learning</a>
+- [ ] <a href="https://www.linkedin.com/learning/node-js-microservices">Microservices with Node</a>
+- [ ] <a href="https://www.pluralsight.com/paths/working-with-rest-apis-in-javascript">RESTful API path, Pluralsight</a>
 
 **Featured Articles**
 Those articles discuss the internals of node
