@@ -1,4 +1,6 @@
-# Intro
+# Node Advanced Topics
+
+![image](https://user-images.githubusercontent.com/42917814/172293103-e98aaf19-d5c0-4e4e-8046-a8cb41a2ff50.png)
 
 On this repo, I've tried my best to have more consistency explaining some of the advanced node concepts
 for each concept I've included the following:
@@ -12,6 +14,7 @@ for each concept I've included the following:
 - [ ] Events
 - [ ] Streams
 - [ ] Child Process and Worker Threads
+- [ ] Libuv and V8
 - [ ] CLI
 - [ ] Microservices
 
