@@ -10,11 +10,12 @@ for each concept I've included the following:
 
 ## Contents
 
-- Events
-- Streams
-- Child process
-- CLI
-- Microservices
+- [ ] Events
+- [ ] Streams
+- [ ] Child process
+- [ ] CLI
+- [ ] Microservices
+
 
 ## Resources
 
