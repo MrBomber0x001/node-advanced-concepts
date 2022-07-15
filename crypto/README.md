@@ -35,3 +35,11 @@ Why Passwords need to be protected?
 - Data Breaches
 
 **Hashing**
+
+
+
+
+## Resources
+
+
+
