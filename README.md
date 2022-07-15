@@ -16,6 +16,8 @@ for each concept I've included the following:
 - CLI
 - Microservices
 
+❗ <strong>It's important to consider that I am using vanilla node for those concepts, no external libs or packages.</strong>
+
 ## Resources
 
 The Resources I've used during my learning process was mainly divided into main sources
