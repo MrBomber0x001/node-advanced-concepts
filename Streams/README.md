@@ -1,103 +1,84 @@
-# Streams
+---
+layout: post
+title: Deep dive into NodeJs Streams
+subtitle: How to effiecently leverage the power of NodeJs streams.
+cover-img: /assets/img/cover.jfif
+thumbnail-img: /assets/img/node.jpg
+share-img: /assets/img/node.jpg
+tags: [nodejs]
+---
+
+TODO: How to use streams with typescript also
+TODO: and also read more about garbage collection on node [MarkSweep, Scavenge]
 
 ## Table of contents
 
-1. [Introduction](#introduction)
-2. [Some paragraph](#introduction)
-    1. [Sub paragraph](#subparagraph1)
-    2. [Sub paragraph](#subparagraph2)
-3. [Another paragraph](#paragraph2)
+0. [Prerequisites](#prerequisites)
+1. [Introduction](#intro_to_streams)
+2. [Streams Types](#stream-types)
+    1. [Readable](#readable-stream)
+    2. [Writable](#writable-streams)
+    3. [Duplex](#duplex-stream)
+    4. [Transform](#transform-stream)
+3. [Practical Application](#practical-application)
+4. [Resources and conclusion](#resources)
 
-## Some paragraph <a name="paragraph1"></a>
+## Prerequisites <a name="prerequisites"></a>
 
-The first paragraph text
+In This article, I am going to show you how to effiecently use streams on your upcoming backend project, and how streams will help you handle streaming data without any bottlnecks.
+We'll start by an introduction to stream and it's types then build upon those knowledge a practical video streaming application which accept uploading and streaming videos.
 
-### Sub paragraph <a name="subparagraph1"></a>
+so before going any further, you should have good amound of understanding the following concepts
 
-This is a sub paragraph, formatted in heading 3 style
-
-## Another paragraph <a name="paragraph2"></a>
-
-The second paragraph text
-
-## Stream base classes
-
-`Readable`, `Writable`, `Duplex`, `Transform`, `PassThrough`
-![](file://C:\Users\ncm\AppData\Roaming\marktext\images\2022-02-12-18-27-35-image.png)
-Strems are event-bases API for managing and modeling data, it allows data to be dynamically processed when it's available, then release it when it's no longer available.
-
-so before going any further, you should have good amound of understanding, Prerequisites:
 *File System (fs)*
 *Events*
 *Buffers*
-*Asyncrounsity*
+*Asyncrounsity in js*
 
-Streams is an abstract interface for creating data flows betweeen objects, and can be composed like LEGO-like modularity
+## Introduction To Streams <a name="intro_to_streams"></a>
+
+Streams is an abstract interface for creating **data flows betweeen objects**, and can be composed like LEGO-like modularity (composed together)
 Streams are not just for working with big data!, one of it's most important features is `composability`, we can compose streams together just like composing linux command line together 'piping'
+
+Strems are event-based API for managing and modeling data, it allows data to be dynamically processed when it's available, then release it when it's no longer available.
+
+On streams: we are not loading the entire file before sending it, we're sending it bit by bit as the server process it or recieve it  
+<img src="C:\Users\ncm\AppData\Roaming\marktext\images\2022-02-12-18-27-35-image.png"/>
+
+### Stream Base Classes
+
+Those are the stream base classes `Readable`, `Writable`, `Duplex`, `Transform`, `PassThrough` which we will use pretty heavily and I am going to discuss each one in details
+
 Example of Stream implementations are very common:
 **Who uses Streams?**
 
-| Readable Streams | Writable Streams
-
-| HTTP response, on the client | HTTP requests, on the client
-
-| HTTP requests, on the server | HTTP responses, on the server
-
-| fs read streams | fs write streams
-
-| zlib streams | zlib streams
-
-| crypto streams | crypto streams
-
-| TCP sockets | TCP sockets
-
-| child process stdout & stderr | child process stdin
-
-| process.stdin | process.stdout, process.stderr
+| Readable Streams | Writable Streams |
+| --- | --- |
+| HTTP response, on the client | HTTP requests, on the client |
+| HTTP requests, on the server | HTTP responses, on the server |
+| fs read streams | fs write streams |
+| zlib streams | zlib streams |
+| crypto streams | crypto streams |
+| TCP sockets | TCP sockets |
+| child process stdout & stderr | child process stdin |
+| process.stdin | process.stdout, process.stderr |
 
 - HTTP: both `req` and `res` are Streams
 - Parser: most parsers are implemented using streams, e.g `json`, `xml` `csv` parser
 - Audio
 - RPC (Remote procedure call): sending stream over network is a useful way to implement interprocess communication
 - And many more
-  on streams: we are not loading the entire file before sending it, we're sending it bit by bit as the server process it or recieve it
-
-## Introduction <a name="introduction"></a>
-
-1. Readable Stream
-  
-2. Writable Stream
-  
-3. Piping Stream
-  
-4. Duplex Stream
-  
-5. Transform Stream
-  
-Resources:
-
-1. jsComplete [samer buna]
-  
-2. Advanced Node - Linkedin Learning
-  
-3. Node In practice
-  
-## What is a Stream? and why?
-
-and also read more about garbage collection on node [MarkSweep, Scavenge]
-
-Before digging into Streams, let's see first it's secret powers!
-
-![stream vs fs](imgs/stream_1.PNG);
 
 ### Examples
 
 To know the importance of stream over data, let's see first how data will be processed without them?
+![stream vs fs](imgs/stream_1.PNG);
 
 **The Buffer example**
 The thing you need to know about `fs.readFile`, is it loads all the content into memory, which will make your node server run out of memory in case you are going to scale.
 
 ```js
+import http from 'http'
 const file = './sample.mp4';
 const server = http.createServer((req, res) => {
     fs.readFile(file, (err, data) => {
@@ -150,7 +131,7 @@ createServer((req, res) => {
 }).listen(3000, () => console.log("port 3000"));
 ```
 
-Notice this example is just to illustrate how streams work, this example is not suitable for HTTP production asset server
+:small_red_triangle: Notice this example is just to illustrate how streams work, this example is not suitable for HTTP production asset server
 
 **Another Example**
 This example will demonstrate the power of streams
@@ -158,10 +139,10 @@ first we need to generate a big file
 
 ```js
 const {createWriteStream} = require("fs");
-const file = createWriteStream("./big.file");
+const writerFile = createWriteStream("./big.file");
 
 for (let i = 0; i <= 1e6; i++) {
-  file.write(
+  writerFile.write(
     "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
   );
 }
@@ -205,11 +186,11 @@ server.listen(8000);
 
 Now look at your process manager and notice the memory consumption! (Magnfiencet isn't it?!)
 
-### A glimpse of Streams
+## Stream Types <a href="stream-types"></a>
 
 There are four main types of streams in Node:
 
-- Readable : represents The source, `req`
+- Readable : represents The source, ex `req`
   
 - Writable: The Destination, `res`
   
@@ -247,14 +228,13 @@ Streams have two main approach:
   readableSrc.pipe(writableSrc);
   ```
   
-  Piping is the easiest way to work with streams, as it takes care of:
-  
+Piping is the easiest way to work with streams, as it takes care of:
+
 - handling-errors
-  
 - handling end of files
-  
 - hanlding `backpressure` (we're going to discuss later!)
-  Also with piping we can do a pipeline (chain of pipes) if we're using Duplex Streams
+
+Also with piping we can do a pipeline (chain of pipes) if we're using Duplex Streams
   a -> Readable
   b,c -> Duplex
   d -> Writable
@@ -273,7 +253,9 @@ Streams have two main approach:
   c.pipe(d);
   ```
   
-#### Readable
+Now Let's discuss each type in details
+
+### Readable <a name="readable-stream"></a>
   
 Readable can read from any type of source ['audio', 'video', 'images', 'text', 'binary file', etc], it provide flexible API around I/O sources
 example of Readable Stream are : [http request on the server, http response on the client, file system, ziping/unziping, tcp process, std.in];
@@ -294,10 +276,10 @@ Readable Stream has two main modes which controls the way we consume it:
 
 1. `flowing mode`
 2. `pausing mode`
-  those modes are referred to sometimes *pull* and *push*
-  To manually switch between those two modes, we use`resume()` and `pause()` methods
-  *📖 note:*
-  Pipe method handles modes automatically!
+those modes are referred to sometimes *pull* and *push*
+ To manually switch between those two modes, we use`resume()` and `pause()` methods
+*note:*
+Pipe method handles modes automatically!
 
 ```js
 const { Readable } = require("stream");
@@ -312,7 +294,7 @@ inStream.pipe(process.stdout);
 ```
 
 In this example, we are pushing all the data into the stream
-& piping ti to a `process.stdout`
+& piping it to a `process.stdout`
 What if we need to push data on demand, when the consumer asks for it?
 
 ```js
@@ -419,7 +401,7 @@ process.stdin.on("data", (chunk) => {
 
 type finish and you will notice that the readStream start pushing the chunks automatically
 
-### Writable Streams
+### Writable Streams <a name="writable-stream"></a>
 
 They represent a destination for incoming data!
 for example, process.stdout and stderr
@@ -516,7 +498,7 @@ const writeStream = createWriteStream('./copy.mp4', {
 });
 ```
 
-## Piping Streams
+### Piping Streams
 
 readableSrc => writableSrc
 
@@ -551,7 +533,7 @@ we could pipe any readableStream to any writableStream
 process.stdin.pipe(writeFileStream);
 ```
 
-## Duplex Stream
+### Duplex Stream
 
 Duplex stream implements both read and write stream, you can think of Duplex Stream as a middle tier between readable and writable stream,
 
@@ -610,7 +592,7 @@ report.on("data", (chunk) => {
 });
 ```
 
-**Transform Stream**
+### Transform Stream
 
 transform stream is special kind of duplex stream which can actually 'transform' data between two streams as the name suggests!
 
@@ -645,7 +627,7 @@ process.stdin.pipe(xStream).pipe(process.stdout);
 There alot of 3rd party modules that implements streams in it's core functionalites
 
 - Mongoose
-  
+
 - MySQL
   
   ```js
@@ -661,11 +643,7 @@ There alot of 3rd party modules that implements streams in it's core functionali
 - Express (Yup!)
   and so many more.
   but on this section, I will try with you to implement Stream into some projects to get the full idea!
-  
-1. Video/audio Server
-  
-2. Image processing server
-  
+
 ## conclusion
   
 There are alot of Streams out there, `zlib` package => transform stream that can zip incoming data from read stream and send it to writeStream
@@ -743,7 +721,7 @@ createServer(async (req, res) => {
 });
 ```
 
-**Handling range requiress**
+**Handling range requests**
 
 **Parsing Multi-form data**
 
@@ -758,8 +736,6 @@ you will find it on the playground `video-streaming`
 When choosing database, or network package, choose the one which provide stream API becuase it's likley to be scalable and can handle large amount of data effiecently
 
 ![](file://C:\Users\ncm\AppData\Roaming\marktext\images\2022-02-16-21-41-38-image.png)
-
-// Inheritance
 
 1. old
   
@@ -825,3 +801,13 @@ app.listen(3000, () => {
   console.log("port 3000");
 });
 ```
+
+## Resources <a name="resources"></a>
+
+Resources:
+
+1. jsComplete [samer buna]
+  
+2. Advanced Node - Linkedin Learning
+  
+3. Node In practice
